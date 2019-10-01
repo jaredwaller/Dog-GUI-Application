@@ -11,75 +11,109 @@ public class StudentMain {
     /*
         This assignment was a doozy. Good luck lol.
     */
+    
+    /*
+        The logic used for creating students in this program is this...
+        
+        Student -> Semester (amount remaining) -> Course (a.r.) -> Test (a.r.)
+        
+        Student -> Semester(2) -> Course(3) -> Test(3)
+                                            -> Test(2)
+                                            -> Test(1)
+    
+                               -> Course(2) -> Test(3)
+                                            -> Test(2)
+                                            -> Test(1)
+    
+                               -> Course(1) -> Test(3)
+                                            -> Test(2)
+                                            -> Test(1)
+    
+    
+                   Semester(1) -> Course(3) -> Test(3)
+                                            -> Test(2)
+                                            -> Test(1)
+    
+                               -> Course(2) -> Test(3)
+                                            -> Test(2)
+                                            -> Test(1)
+    
+                               -> Course(1) -> Test(3)
+                                            -> Test(2)
+                                            -> Test(1)
+    
+        I can show you in person how the logic works if you want.
+    
+        The addObjects methods are literally copy and pastes of each other.
+        You just change the variable types and names.
+                   
+    */
     public static void main(String[] args) {
         
+        
         Scanner in = new Scanner(System.in);
-        Student[] students = new Student[]{};
+        
+        //We do not intialize the students array here, we do that in 'addStudents'
+        Student[] students;
+        
+
+        students = addStudents(in);
+
+
+        printStudents(students);
+    }
+    
+    public static Student[] addStudents(Scanner in)
+    {
+        /*
+            We want to know how many students there are.
+        */
+        System.out.println("How many students are there?");
+        int numOfStudents = in.nextInt();
+        in.nextLine();
+        
+        //we need to create a temporary array of students that we will eventually
+        //give to the student array in the main method
+        Student[] tempStudents = new Student[numOfStudents];
         
         /*
-            uI will be our conditional requirement. We set it to 'y' at first
-            so that the while loop runs in the first place. If it is set to
-            anything else, nothing will happen.
+            We will repeat this for each of our students
         */
-        String uI = "y";
-        while(uI.equalsIgnoreCase("y"))
+        for(int i = 0; i < numOfStudents; i++)
         {
+            System.out.println("What is the name of student #" + (i+1) + " ?");
+            String studentName = in.nextLine();
+            System.out.println("What is the major of student #" + (i+1) + " ?");
+            String studentMajor = in.nextLine();
+            
+            //we must initialize the student to be able to give it a name
+            //and tests
+            Student newStudent = new Student();
+            newStudent.setName(studentName);
+            newStudent.setMajor(studentMajor);
             
             /*
-                We will carry the scanner and the array of students into
-                'createStudent'.
+                Here we will add the new student to the list of students that
+                we will give to the student array in main.
             */
-            Student temp = createStudent(in, students);
+            tempStudents[i] = newStudent;
             
-            students = addStudent(students,temp);
+            /*
+                Now, let's give our student some semesters
+            */
+            tempStudents[i].setSemesters(addSemesters(newStudent, in));
             
-
-            printStudents(students);
             
-            System.out.println("Would you like to make another student? (y/n)");
-            uI = in.nextLine();
         }
         
-        
-        
+        //Give the list of students to the student array in main
+        return tempStudents;
     }
     
-    /*
-        In this method, we will get the name and major of the student and
-        create the student.
-    */
-    public static Student createStudent(Scanner in, Student[] students)
-    {
-        System.out.println("Enter the student's first name: ");
-        String fname = in.nextLine();
-        System.out.println("Enter the student's last name: ");
-        String lname = in.nextLine();
-        System.out.println("Enter the student's major: ");
-        String major = in.nextLine();
-        
-        Student temp = new Student(major, lname, fname);
-        
-        /*
-            This is the start of the rabbit hole to H E double hockey sticks.
-            Remember the room analogy? How you can't go to the end without
-            first going through every other room? Well here we go...
-        
-            So we created a student called 'temp' and gave him a name and
-            major based off of user input. We will drop him into the whirpool
-            where we will assign him a number of semesters, and within those
-            semesters, we will assign him a number of courses, and within
-            those courses, we will assign him a number of tests, and within
-            those tests, we will assing him grades. In that order. So first
-            we set his semester array to an array of semesters we make in
-            'addSemesters'. We carry the student and the scanner with us.
-        */
-        temp.setSemesters(addSemesters(temp, in));
-        
-        return temp;
-    }
+    
     
     /*
-        In this method, we will find out how many semester the student has
+        In this method, we will find out how many semesters the student has
         and create courses, tests and grades for them.
     */
     
@@ -219,36 +253,6 @@ public class StudentMain {
         return tempTests;
     }
     
-    /*
-        This method adds the newly created student to our student array in main
-        It is separate because the array of students in the main method is
-        persistent.
-    */
-    public static Student[] addStudent(Student[] students, Student newStudent)
-    {
-        /*
-            Since you can not change the length of arrays in Java, we need to
-            make a temporary array that is one length longer than the current
-            student array.
-        */
-        Student[] temp = new Student[students.length+1];
-        
-        /*
-            arraycopy is a built in Java function. The parameters are:
-            arraycopy(arrayToCopyFrom, startingIndex, copyToArray, startingIndex, finishingIndex)
-            This copies the array into a new one that has one new empty spot at
-            the end
-        */
-        System.arraycopy(students,0,temp,0,students.length);
-        
-        /*
-            Since we never filled in the last spot of the new array because we
-            stopped at the original array length, we have a spot for our new
-            student.
-        */
-        temp[temp.length-1] = newStudent;
-        return temp;
-    }
     
     //For every student, we will print out their attributes
     public static void printStudents(Student[] students)
@@ -258,5 +262,6 @@ public class StudentMain {
             students[i].printStudent();
         }
     }
+    
     
 }

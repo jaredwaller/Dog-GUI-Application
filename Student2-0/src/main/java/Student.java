@@ -51,6 +51,14 @@ public class Student {
         return fname + " " + lname;
     }
     
+    public void setName(String fullName)
+    {
+        String[] name = fullName.split(" ");
+        
+        this.fname = name[0];
+        this.lname = name[1];
+    }
+    
     public String getMajor(){
         return major;
     }
