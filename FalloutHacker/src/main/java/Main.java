@@ -102,7 +102,7 @@ public class Main
             {
                 System.out.println("> " + keyword.length() + "/" + keyword.length() + " correct");
                 System.out.println("> Exact match!");
-                break;
+                System.exit(0);
             }
             
             //if the guess is incorrect, get the number of matching chararcters
